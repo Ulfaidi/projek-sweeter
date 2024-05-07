@@ -1,3 +1,7 @@
+import os
+from os.path import join, dirname
+from dotenv import load_dotenv
+
 from pymongo import MongoClient
 import jwt
 from datetime import datetime, timedelta
@@ -12,6 +16,8 @@ from flask import (
 )
 from werkzeug.utils import secure_filename
 
+
+
 app = Flask(__name__)
 
 app.config['TEMPLATES_AUTO_RELOAD'] = True
@@ -19,11 +25,15 @@ app.config['UPLOAD_FOLDER'] = './static/profile_pics'
 
 SECRET_KEY = "SPARTA"
 
-MONGODB_CONNECTION_STRING = "mongodb://tes:sparta@ac-3yctn6n-shard-00-00.tlo2vsi.mongodb.net:27017,ac-3yctn6n-shard-00-01.tlo2vsi.mongodb.net:27017,ac-3yctn6n-shard-00-02.tlo2vsi.mongodb.net:27017/?ssl=true&replicaSet=atlas-eeaf5d-shard-0&authSource=admin&retryWrites=true&w=majority&appName=Cluster0"
+dotenv_path = join(dirname(__file__), '.env')
+load_dotenv(dotenv_path)
 
-client = MongoClient(MONGODB_CONNECTION_STRING)
+MONGODB_URI = os.environ.get("MONGODB_URI")
+DB_NAME =  os.environ.get("DB_NAME")
 
-db = client.dbsparta_plus_week4
+client = MongoClient(MONGODB_URI)
+
+db = client[DB_NAME]
 
 TOKEN_KEY = "mytoken"
 
